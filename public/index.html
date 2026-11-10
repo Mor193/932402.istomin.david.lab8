@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Учёт библиотечного фонда</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <aside id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></aside>
+
+  <header class="app-header">
+    <div class="container header-content">
+      <div class="brand">
+        <h1>Библиотека книг</h1>
+        <p class="subtitle">Система оперативного учёта и контроля сроков выдачи</p>
+      </div>
+      <button id="openAddBookBtn" class="btn btn-primary" aria-label="Добавить новую книгу в каталог">
+        <span class="icon" aria-hidden="true">+</span> Добавить книгу
+      </button>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <section class="toolbar-card" aria-label="Панель фильтров">
+      <form id="filterForm" class="filter-form" role="search" onsubmit="return false;">
+        <div class="form-group search-group">
+          <label for="searchInput">Поиск</label>
+          <input 
+            type="search" 
+            id="searchInput" 
+            placeholder="Название книги или автор..." 
+            autocomplete="off"
+            aria-label="Поиск по названию книги или автору"
+          >
+        </div>
+
+        <div class="form-group filter-group">
+          <label for="statusFilter">Статус</label>
+          <select id="statusFilter" aria-label="Фильтрация по статусу книги">
+            <option value="">Все статусы</option>
+            <option value="available">В наличии</option>
+            <option value="issued">На руках</option>
+            <option value="reserved">В резерве</option>
+          </select>
+        </div>
+
+        <button type="button" id="resetFiltersBtn" class="btn btn-secondary" aria-label="Сбросить все фильтры">
+          Сбросить
+        </button>
+      </form>
+    </section>
+
+    
+    <section class="table-card" aria-label="Таблица каталога книг">
+      <div class="table-responsive">
+        <table class="books-table" id="booksTable">
+          <caption class="visually-hidden">Список книг библиотеки с текущими статусами и действиями</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="col-id">ID</th>
+              <th scope="col">Название</th>
+              <th scope="col">Автор</th>
+              <th scope="col">ISBN</th>
+              <th scope="col">Статус</th>
+              <th scope="col">Читатель</th>
+              <th scope="col">Срок сдачи</th>
+              <th scope="col" class="col-actions">Действия</th>
+            </tr>
+          </thead>
+          <tbody id="booksTableBody">
+            <tr>
+              <td colspan="8" class="text-center">Загрузка данных каталога...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  
+  <dialog id="bookDialog" class="modal-dialog" aria-labelledby="bookDialogTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="bookDialogTitle">Добавление книги</h2>
+        <button type="button" class="btn-close" id="closeBookDialogBtn" aria-label="Закрыть модальное окно">&times;</button>
+      </div>
+      <form id="bookForm" method="dialog" novalidate>
+        <input type="hidden" id="bookId" name="id">
+
+        <div class="form-group">
+          <label for="bookTitle">Название книги <span class="required">*</span></label>
+          <input type="text" id="bookTitle" name="title" required placeholder="например, Чистый код">
+        </div>
+
+        <div class="form-group">
+          <label for="bookAuthor">Автор <span class="required">*</span></label>
+          <input type="text" id="bookAuthor" name="author" required placeholder="например, Роберт Мартин">
+        </div>
+
+        <div class="form-group">
+          <label for="bookIsbn">ISBN</label>
+          <input type="text" id="bookIsbn" name="isbn" placeholder="978-5-4461-0960-9">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelBookBtn">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="saveBookBtn">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  
+  <dialog id="issueDialog" class="modal-dialog" aria-labelledby="issueDialogTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="issueDialogTitle">Выдача книги читателю</h2>
+        <button type="button" class="btn-close" id="closeIssueDialogBtn" aria-label="Закрыть модальное окно">&times;</button>
+      </div>
+      <form id="issueForm" method="dialog" novalidate>
+        <input type="hidden" id="issueBookId" name="bookId">
+        
+        <p class="modal-prompt">Книга: <strong id="issueBookTitle">—</strong></p>
+
+        <div class="form-group">
+          <label for="borrowerSelect">Читатель <span class="required">*</span></label>
+          <select id="borrowerSelect" name="borrower_id" required>
+            <option value="">Выберите зарегистрированного читателя</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="dueDateInput">Срок возврата <span class="required">*</span></label>
+          <input type="date" id="dueDateInput" name="due_date" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelIssueBtn">Отмена</button>
+          <button type="submit" class="btn btn-accent" id="confirmIssueBtn">Оформить выдачу</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
